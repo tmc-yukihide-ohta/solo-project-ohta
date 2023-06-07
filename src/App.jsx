@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { InputItem } from "./components/InputItem";
 import { BuyList } from "./components/BuyList";
@@ -72,6 +72,31 @@ export const App = () => {
     console.log(purchasedItems);
     console.log(unpurchasedItems);
   };
+
+  const URL =
+    process.env.NODE_ENV === "production"
+      ? "https://.com"
+      : "http://localhost:8080";
+
+  const getPurchaseItems = () => {
+    fetch(`${URL}/api/purchaseitems`, { method: "GET" })
+      .then((res) => res.json())
+      .then((getData) => {
+        console.log("getData:", getData);
+        // getData.sort((a, b) => {
+        //   if (a.isWaiting === b.isWaiting) {
+        //     return a.id - b.id;
+        //   }
+        //   return b.isWaiting - a.isWaiting;
+        // });
+        console.log(getData);
+        setItemList(getData);
+      });
+  };
+
+  useEffect(() => {
+    getPurchaseItems();
+  }, []);
 
   return (
     <div className="container">
