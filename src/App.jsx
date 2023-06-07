@@ -7,9 +7,9 @@ import "./components/styles/styles.css";
 export const App = () => {
   const [itemText, setItemText] = useState("");
   const [itemList, setItemList] = useState([
-    { id: 1, content: "りんご", isStriked: false },
-    { id: 2, content: "バナナ", isStriked: false },
-    { id: 3, content: "玉ねぎ", isStriked: false },
+    // { timestamp: 1, content: "りんご", isStriked: false },
+    // { timestamp: 2, content: "バナナ", isStriked: false },
+    // { timestamp: 3, content: "玉ねぎ", isStriked: false },
   ]);
 
   // 商品名の値を取得
@@ -17,6 +17,7 @@ export const App = () => {
     setItemText(event.target.value);
   };
 
+  // キーとなるタイムスタンプを取得
   const getTimestamp = () => {
     const now = new Date();
 
@@ -37,7 +38,7 @@ export const App = () => {
     if (itemText === "") return;
     const timestamp = getTimestamp();
     const newItem = {
-      id: timestamp,
+      timestamp: timestamp,
       content: itemText,
       isStriked: false,
     };
@@ -47,24 +48,44 @@ export const App = () => {
   };
 
   // クリックしたら取り消し線のon/offをする関数
-  const handleItemTextClick = (id) => {
+  const handleItemTextClick = (timestamp) => {
     setItemList((prevItems) =>
       prevItems.map(
         (item) =>
-          item.id === id ? { ...item, isStriked: !item.isStriked } : item // ...itemでオブジェクトを複製してisStrikedの値を逆転したオブジェクトになる
+          item.timestamp === timestamp
+            ? { ...item, isStriked: !item.isStriked }
+            : item // ...itemでオブジェクトを複製してisStrikedの値を逆転したオブジェクトになる
       )
     );
   };
 
+  const onClickPurchasedItems = () => {
+    console.log("購入されたよー");
+    const newItemList = [...itemList];
+    const purchasedItems = newItemList.filter((item) => {
+      return item.isStriked === true;
+    });
+    const unpurchasedItems = newItemList.filter((item) => {
+      return item.isStriked === false;
+    });
+    setItemList(unpurchasedItems);
+    console.log(purchasedItems);
+    console.log(unpurchasedItems);
+  };
+
   return (
-    <>
+    <div className="container">
       <InputItem
         itemText={itemText}
         setItemText={setItemText}
         onChangeItemText={onChangeItemText}
         onClickAdd={onClickAdd}
       />
-      <BuyList itemList={itemList} handleItemTextClick={handleItemTextClick} />
-    </>
+      <BuyList
+        itemList={itemList}
+        handleItemTextClick={handleItemTextClick}
+        onClickPurchasedItems={onClickPurchasedItems}
+      />
+    </div>
   );
 };

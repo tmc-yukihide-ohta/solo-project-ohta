@@ -2,6 +2,12 @@ body {
     font-family: sans-serif;
 }
 
+.container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 8px;
+}
+
 input {
     border-radius: 16px;
     border: none;
@@ -14,10 +20,16 @@ p.text {
 }
 
 button {
-    border-radius: 16px;
+    border-radius: 8px;
     border: none;
     padding: 4px 16px;
     margin-left: 8px;
+    white-space: nowrap
+}
+
+.list-row button {
+    padding: 4px 8px;
+    margin: 0px 8px 0px 0px;
 }
 
 button:hover {
@@ -27,31 +39,23 @@ button:hover {
 }
 
 .input-area {
+    box-sizing: border-box;
     background-color: #c1ffff;
-    width: 400px;
-    height: 30px;
-    padding: 8px;
-    margin: 8px;
+    max-width: 100%;
     border-radius: 8px;
+    padding: 8px;
+    margin: 0 0 8px 0;
 }
 
-.incomplete-area {
+.shopping-area {
+    box-sizing: border-box;
     background-color: #c6ffe2;
-    width: 400px;
+    max-width: 100%;
     min-height: 200px;
     padding: 8px;
-    margin: 8px;
     border-radius: 8px;
 }
 
-.complete-area {
-    background-color: #ffffe0;
-    width: 400px;
-    min-height: 200px;
-    padding: 8px;
-    margin: 8px;
-    border-radius: 8px;
-}
 
 .title {
 
@@ -62,6 +66,17 @@ button:hover {
 
 .list-row {
     display: flex;
-    align-items: center;
-    padding-bottom: 4px;
+    padding: 4px;
+    border-bottom: dashed 1px #b8b8b8;
+}
+
+.item-text {
+    width: 100%;
+    cursor: pointer;
+}
+
+.list-row:hover {
+    background-color: #7fffa3;
+    /* color: #fff; */
+    cursor: pointer;
 }
