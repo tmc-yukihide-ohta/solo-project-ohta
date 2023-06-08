@@ -13,13 +13,6 @@ const buildPath = path.join(__dirname, './build')
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// app.use((req, res, next) => {
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Headers", "Content-Type");
-//     res.header("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
-//     next();
-// });
-
 app.use(express.static(buildPath))
 app.use(express.json())
 app.use(cors())
@@ -39,8 +32,6 @@ app.listen(port, () => {
 //     console.log("")
 //     next();
 // });
-
-
 
 const allPurchase = () => {
     return knex
@@ -155,9 +146,6 @@ app.patch("/api/itemedit", async (req, res) => {
     res.status(200).json(allPurchaseArr);
 })
 
-
-
-
 app.delete("/api/purchaseitems", async (req, res) => {
     console.log("delete受信")
     const deleteTimestamp = req.body.timestamp;
@@ -179,3 +167,5 @@ app.delete("/api/purchaseitems", async (req, res) => {
     console.log(allPurchaseArr);
     res.status(200).json(allPurchaseArr);
 })
+
+

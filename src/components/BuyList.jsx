@@ -9,7 +9,6 @@ export const BuyList = (props) => {
   } = props;
   return (
     <div className="shopping-area">
-      {console.log("----------BuyList_return配下 読込み---------")}
       <p className="title">
         🛒買物リスト <button onClick={onClickPurchasedItems}>買ったよ〜</button>
       </p>

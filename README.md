@@ -8,8 +8,9 @@
 4. 各種モジュールのインストール・・・npm install
 5. データベースの準備・・・echo "CREATE DATABASE cc_shopping_apps;" | psql
 6. マイグレーション・・・npm run migrate
-7. サーバー起動・・・npm run server
-8. react 起動・・・npm start
+7. (任意)シード・・・npm run seed
+8. サーバー起動・・・npm run server
+9. react 起動・・・npm start
 
 # 使用テクノロジー
 
