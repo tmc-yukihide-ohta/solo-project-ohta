@@ -79,7 +79,7 @@ export const App = () => {
   // 開発環境とプロダクションでのURLの切り替え
   const URL =
     process.env.NODE_ENV === "production"
-      ? "https://.com"
+      ? "https://shopping-support-apps.onrender.com"
       : "http://localhost:8080";
 
   // purchaseテーブルの情報を取得
