@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path')
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 dotenv.config()
@@ -20,6 +21,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static(buildPath))
+app.use(express.json())
 app.use(cors())
 
 app.listen(port, () => {
