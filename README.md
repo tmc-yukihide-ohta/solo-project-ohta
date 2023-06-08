@@ -1,35 +1,67 @@
 # solo-project-ohta
 
-# テーブル構成
+# 環境構築
 
-purchase：購入予定と購入済みアイテムが格納される
-　キー：id
-　 html 内のキー：timestamp
-　登録日：registration_date
-　商品名：item_name
-　個数：quantity
-　単位：unit
-　購入予定店舗：shop_candidate
-　購入日：purchase_date
-　取消線:strike_line
+1. GitHub からフォーク
+2. クローンの実施・・・git clone <SSH>
+3. VSC でクローンしたフォルダを開く
+4. 各種モジュールのインストール・・・npm install
+5. データベースの準備・・・echo "CREATE DATABASE cc_shopping_apps;" | psql
+6. マイグレーション・・・npm run migrate
+7. サーバー起動・・・npm run server
+8. react 起動・・・npm start
 
-category:カテゴリの情報・・・未実装
-キー：id
-分類：category
+# 使用テクノロジー
 
-categorization:カテゴリと商品の情報が格納される・・・未実装
-キー：id
-紐付けキー：category の id
-商品名：items
+Express
+PostgreSQL
+Knex
+React
 
-shop：お店の名前・・・未実装
-キー：id
-店舗名：shop_name
+# アプリ説明
 
-precedence：店名と category の並び順が格納される・・・未実装
-キー：id
-紐付けキー：shop の id
-並び順：route
+買物リストを作成し買い忘れを支援するアプリです。
+
+#　使い方
+
+1. 商品入力欄に、商品名を記入し「追加」ボタンで買い物リストに追加
+2. お店で商品をカートに入れた際に、商品名をクリックすることで取消線が入る
+3. お店で支払いが完了したら、「買ったよー」ボタンを押して、買い物リストから除外
+4. 不要になった商品は、「削除」ボタンを押す
+
+# 直面した課題
+
+・配列を map で react 上に書いて、ボタンに関連するデータを参照する方法を探すのに苦労した
+　　解決策：
+{itemList.map((item) => (
+
+<div className="list-row" key={item.timestamp}>
+{/_ <button>修正</button> _/}
+<button onClick={() => onClickDeleteItem(item.timestamp)}>
+削除
+</button>
+　・ローカルで正常に動いていたのに、render 上では動作しなかった。
+　　　解決策：
+
+# 学び
+
+・react の基本的な動きの理解
+　・スプレッド構文：配列やオブジェクトの要素を展開する構文
+　　https://qiita.com/akisx/items/682a4283c13fe336c547
+　　 useState の値をセットするのに役に立った
+　・分割代入：オブジェクトの値の書き方を簡略化できる
+　　例：const test = {aaa:あああ, bbb:いいい}　
+　　　　 const {aaa, bbb} = test
+　　実例
+　　 export const BuyList = (props) => {
+　 const {
+　 itemList,
+　 handleItemTextClick,
+　 onClickPurchasedItems,
+　 onClickDeleteItem,
+　} = props;
+この後、props を書かなくても
+ok
 
 # Getting Started with Create React App
 
