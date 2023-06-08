@@ -4,6 +4,7 @@ export const InputItem = (props) => {
   const { itemText, onChangeItemText, onClickAdd } = props;
   return (
     <>
+      {console.log("----------InputItem_return配下 読込み---------")}
       <div className="input-area">
         <input
           id="add-text"

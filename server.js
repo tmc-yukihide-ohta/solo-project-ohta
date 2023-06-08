@@ -13,12 +13,12 @@ const buildPath = path.join(__dirname, './build')
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Content-Type");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
-    next();
-});
+// app.use((req, res, next) => {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Headers", "Content-Type");
+//     res.header("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
+//     next();
+// });
 
 app.use(express.static(buildPath))
 app.use(express.json())
@@ -40,6 +40,8 @@ app.listen(port, () => {
 //     next();
 // });
 
+
+
 const allPurchase = () => {
     return knex
         .select({
@@ -51,6 +53,17 @@ const allPurchase = () => {
             purchaseDate: "purchase_date"
         })
         .from("purchase");
+};
+
+const getTimestamp = () => {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1; //末尾から2文字抽出
+    const day = now.getDate();
+
+    const timestamp = `${year}-${month}-${day}`;
+    return timestamp;
 };
 
 
@@ -67,7 +80,6 @@ app.post("/api/purchaseitems", async (req, res) => {
     console.log(postData);
     const mytimestamp = getTimestamp();
     const postFunc = (timestamp, itemName, strikeLine) => {
-        console.log("63行:", timestamp, itemName, strikeLine)
         return knex("purchase")
             .insert({
                 "timestamp": timestamp,
@@ -76,10 +88,10 @@ app.post("/api/purchaseitems", async (req, res) => {
                 "registration_date": mytimestamp
             })
             .then(() => {
-                console.log('データの更新が完了しました');
+                console.log('データの登録が完了しました');
             })
             .catch((err) => {
-                console.error('データの更新中にエラーが発生しました:', err);
+                console.error('データの登録中にエラーが発生しました:', err);
             })
     }
     await postFunc(postData.timestamp, postData.itemName, postData.strikeLine);
@@ -90,38 +102,50 @@ app.post("/api/purchaseitems", async (req, res) => {
 
 app.patch("/api/purchaseitems", async (req, res) => {
     console.log("patch受信")
-    // const patchData = req.body;
-    // console.log(patchData);
-    // const timestamp = getTimestamp();
-    // const postFunc = (timestamp, strikeLine) => {
-    //     return knex("purchase")
-    //         .insert({
-    //             "timestamp": timestamp,
-    //             "strike_line": strikeLine,
-    //             "purchase_date": timestamp
-    //         })
-    //         .then(() => {
-    //             console.log('データの更新が完了しました');
-    //         })
-    //         .catch((err) => {
-    //             console.error('データの更新中にエラーが発生しました:', err);
-    //         })
-    // }
-    // await postFunc(patchData.timestamp, patchData.strikeLine);
-    // const allPurchaseArr = await allPurchase();
-    // console.log(allPurchaseArr);
-    // res.status(200).json(allPurchaseArr);
-    res.status(200);
+    const patchData = req.body;
+    const mytimestamp = getTimestamp();
+    const patchFunc = (timestamp, isStriked) => {
+        return knex
+            .from("purchase")
+            .where({ "timestamp": timestamp })
+            .update({
+                "strike_line": isStriked,
+                "purchase_date": mytimestamp
+            })
+            .then(() => {
+                console.log('データの更新が完了しました');
+            })
+            .catch((err) => {
+                console.error('データの更新中にエラーが発生しました:', err);
+            })
+    };
+    const patchDataPromises = patchData.map((obj) => {
+        return patchFunc(obj.timestamp, obj.isStriked);
+    });
+    await Promise.all(patchDataPromises);
+
+    const allPurchaseArr = await allPurchase();
+    res.status(200).json(allPurchaseArr);
 })
 
-
-const getTimestamp = () => {
-    const now = new Date();
-
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1; //末尾から2文字抽出
-    const day = now.getDate();
-
-    const timestamp = `${year}-${month}-${day}`;
-    return timestamp;
-};
+app.delete("/api/purchaseitems", async (req, res) => {
+    console.log("delete受信")
+    const deleteTimestamp = req.body.timestamp;
+    console.log(deleteTimestamp)
+    const deleteFunc = () => {
+        return knex
+            .from("purchase")
+            .where({ "timestamp": deleteTimestamp })
+            .del()
+            .then(() => {
+                console.log('データの削除が完了しました');
+            })
+            .catch((err) => {
+                console.error('データの削除中にエラーが発生しました:', err);
+            })
+    };
+    await deleteFunc();
+    const allPurchaseArr = await allPurchase();
+    console.log(allPurchaseArr);
+    res.status(200).json(allPurchaseArr);
+})
