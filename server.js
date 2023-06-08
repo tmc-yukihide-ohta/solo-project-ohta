@@ -6,6 +6,7 @@ const knex = require("./db/knex");
 const port = process.env.PORT || 8080
 const app = express();
 const cors = require("cors");
+const buildPath = path.join(__dirname, './build')
 
 // body-parserミドルウェアを使用してリクエストのボディをパース
 app.use(bodyParser.json());
@@ -18,6 +19,7 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use(express.static(buildPath))
 app.use(cors())
 
 app.listen(port, () => {
