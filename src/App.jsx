@@ -8,8 +8,6 @@ export const App = () => {
   const [itemText, setItemText] = useState("");
   const [itemList, setItemList] = useState([
     // { timestamp: 1, content: "りんご", isStriked: false },
-    // { timestamp: 2, content: "バナナ", isStriked: false },
-    // { timestamp: 3, content: "玉ねぎ", isStriked: false },
   ]);
 
   // 商品名の値を取得
@@ -42,7 +40,9 @@ export const App = () => {
       content: itemText,
       isStriked: false,
     };
+    postPurchaseItem(newItem);
     const newItems = [...itemList, newItem];
+
     setItemList(newItems);
     setItemText("");
   };
@@ -57,14 +57,17 @@ export const App = () => {
             : item // ...itemでオブジェクトを複製してisStrikedの値を逆転したオブジェクトになる
       )
     );
+    console.log("取消線が切り替わりました");
   };
 
+  //購入ボタン実行時のアクション
   const onClickPurchasedItems = () => {
     console.log("購入されたよー");
     const newItemList = [...itemList];
     const purchasedItems = newItemList.filter((item) => {
       return item.isStriked === true;
     });
+    patchPurchasedItems(purchasedItems);
     const unpurchasedItems = newItemList.filter((item) => {
       return item.isStriked === false;
     });
@@ -73,25 +76,61 @@ export const App = () => {
     console.log(unpurchasedItems);
   };
 
+  // 開発環境とプロダクションでのURLの切り替え
   const URL =
     process.env.NODE_ENV === "production"
       ? "https://.com"
       : "http://localhost:8080";
 
+  // purchaseテーブルの情報を取得
   const getPurchaseItems = () => {
     fetch(`${URL}/api/purchaseitems`, { method: "GET" })
       .then((res) => res.json())
       .then((getData) => {
-        console.log("getData:", getData);
-        // getData.sort((a, b) => {
-        //   if (a.isWaiting === b.isWaiting) {
-        //     return a.id - b.id;
-        //   }
-        //   return b.isWaiting - a.isWaiting;
-        // });
-        console.log(getData);
-        setItemList(getData);
+        const filterData = getData.filter((obj) => {
+          return obj.purchaseDate === null;
+        });
+        setItemList(filterData);
       });
+  };
+
+  // purchaseテーブルの情報を取得してsetItemListにセット
+  const postPurchaseItem = (item) => {
+    const body = {
+      timestamp: item.timestamp,
+      itemName: item.content,
+      strikeLine: item.isStriked,
+    };
+    console.log(body);
+    fetch(`${URL}/api/purchaseitems`, {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    }).then(() => getPurchaseItems());
+    // .then((res) => res.json())
+    // .then((getData) => {
+    //   console.log("getData:", getData);
+    //   setItemList(getData);
+    // });
+    console.log("post受信:", itemList);
+  };
+
+  // purchaseテーブルの情報を取得してsetItemListにセット
+  const patchPurchasedItems = (item) => {
+    const body = {
+      timestamp: item.timestamp,
+      strikeLine: item.isStriked,
+    };
+    console.log(body);
+    fetch(`${URL}/api/purchaseitems`, {
+      method: "PATCH",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    }).then(() => getPurchaseItems());
   };
 
   useEffect(() => {

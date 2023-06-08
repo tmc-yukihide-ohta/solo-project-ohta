@@ -11,6 +11,7 @@ purchase：購入予定と購入済みアイテムが格納される
 　単位：unit
 　購入予定店舗：shop_candidate
 　購入日：purchase_date
+　取消線:strike_line
 
 category:カテゴリの情報・・・未実装
 キー：id

@@ -5,8 +5,7 @@ export const BuyList = (props) => {
   return (
     <div className="shopping-area">
       <p className="title">
-        🛒お買い物リスト{" "}
-        <button onClick={onClickPurchasedItems}>買ったよ〜</button>
+        🛒買物リスト <button onClick={onClickPurchasedItems}>買ったよ〜</button>
       </p>
       <div id="shopping-list">
         {itemList.map((item) => (
@@ -18,6 +17,7 @@ export const BuyList = (props) => {
               // 1つ目の{はJSX内でJavaScriptの式を評価し、その結果を埋め込むために使用。2つ目の{は、JavaScriptのオブジェクトリテラルを作成している
               style={{
                 textDecoration: item.isStriked ? "line-through" : "none",
+                color: item.isStriked ? "#aaaaaa" : "black",
               }}
               onClick={() => handleItemTextClick(item.timestamp)}
             >
