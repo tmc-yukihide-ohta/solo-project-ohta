@@ -104,7 +104,7 @@ app.patch("/api/purchaseitems", async (req, res) => {
     console.log("patch受信")
     const patchData = req.body;
     const mytimestamp = getTimestamp();
-    const patchFunc = (timestamp, isStriked) => {
+    const patchFunc = (timestamp, isStriked,) => {
         return knex
             .from("purchase")
             .where({ "timestamp": timestamp })
@@ -127,6 +127,36 @@ app.patch("/api/purchaseitems", async (req, res) => {
     const allPurchaseArr = await allPurchase();
     res.status(200).json(allPurchaseArr);
 })
+
+// 取消線を入れた状態で削除を押した時の対策（取消線を維持させる）
+app.patch("/api/itemedit", async (req, res) => {
+    console.log("patch受信_取消線用")
+    const patchData = req.body;
+    const patchFunc = (timestamp, itemName, isStriked,) => {
+        console.log(timestamp, itemName, isStriked)
+        return knex
+            .from("purchase")
+            .where({ "timestamp": timestamp })
+            .update({
+                "item_name_line": itemName,
+                "strike_line": isStriked,
+            })
+            .then(() => {
+                console.log('データの更新が完了しました');
+            })
+            .catch((err) => {
+                console.error('データの更新中にエラーが発生しました:', err);
+            })
+    };
+    await patchFunc(patchData.timestamp, patchData.itemName, patchData.isStriked);
+
+
+    const allPurchaseArr = await allPurchase();
+    res.status(200).json(allPurchaseArr);
+})
+
+
+
 
 app.delete("/api/purchaseitems", async (req, res) => {
     console.log("delete受信")

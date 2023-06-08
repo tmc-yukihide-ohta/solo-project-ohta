@@ -46,13 +46,28 @@ export const App = () => {
 
   // クリックしたら取り消し線のon/offをする関数
   const handleItemTextClick = (timestamp) => {
+    console.log(timestamp);
     setItemList((prevItems) =>
-      prevItems.map(
-        (item) =>
-          item.timestamp === timestamp
-            ? { ...item, isStriked: !item.isStriked }
-            : item // ...itemでオブジェクトを複製してisStrikedの値を逆転したオブジェクトになる
-      )
+      prevItems.map((item) => {
+        if (item.timestamp === timestamp) {
+          const body = {
+            timestamp: timestamp,
+            itemName: item.Content,
+            isStriked: !item.isStriked,
+          };
+          fetch(`${URL}/api/itemedit`, {
+            method: "PATCH",
+            body: JSON.stringify(body),
+            headers: {
+              "Content-type": "application/json; charset=UTF-8",
+            },
+          });
+
+          return { ...item, isStriked: !item.isStriked };
+        } else {
+          return item; // ...itemでオブジェクトを複製してisStrikedの値を逆転したオブジェクトになる
+        }
+      })
     );
     console.log("取消線が切り替わりました");
   };
