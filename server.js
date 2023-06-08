@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
+dotenv.config()
 const knex = require("./db/knex");
 const port = process.env.PORT || 8080
 const app = express();
