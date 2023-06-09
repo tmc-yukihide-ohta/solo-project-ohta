@@ -6,6 +6,7 @@ export const InputItem = (props) => {
     <>
       <div className="input-area">
         <input
+          aria-label="商品名"
           id="add-text"
           placeholder="買いたい商品を入力"
           value={itemText}

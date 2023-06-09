@@ -14,6 +14,7 @@ input {
     border: none;
     padding: 6px 16px;
     outline: none;
+    width: 100%;
 }
 
 p.text {
@@ -26,6 +27,10 @@ button {
     padding: 4px 16px;
     margin-left: 8px;
     white-space: nowrap
+}
+
+button#add-button {
+    width: 100px;
 }
 
 .list-row button {
@@ -46,6 +51,8 @@ button:hover {
     border-radius: 8px;
     padding: 8px;
     margin: 0 0 8px 0;
+    display: flex;
+    align-items: center
 }
 
 .shopping-area {
